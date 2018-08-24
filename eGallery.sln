@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Infrastructure.BaseClass", "eGallery.Infrastructure.BaseClass\eGallery.Infrastructure.BaseClass.csproj", "{7F79E1AD-BC84-4F5B-AD38-3493ABE0383F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Infrastructure.BaseClass", "eGallery.Infrastructure.BaseClass\eGallery.Infrastructure.BaseClass.csproj", "{7F79E1AD-BC84-4F5B-AD38-3493ABE0383F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Contracts", "eGallery.Contracts\eGallery.Contracts.csproj", "{BF613F74-C3C5-4877-A708-743E58018E66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Contracts", "eGallery.Contracts\eGallery.Contracts.csproj", "{BF613F74-C3C5-4877-A708-743E58018E66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Repository", "eGallery.Repository\eGallery.Repository.csproj", "{D1AD3DAC-3694-4D49-B383-D2F010353B00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Repository", "eGallery.Repository\eGallery.Repository.csproj", "{D1AD3DAC-3694-4D49-B383-D2F010353B00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Business", "eGallery.Business\eGallery.Business.csproj", "{0D2273BE-7964-4B52-9A54-897905E31490}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Business", "eGallery.Business\eGallery.Business.csproj", "{0D2273BE-7964-4B52-9A54-897905E31490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.UnitOfWork", "eGallery.UnitOfWork\eGallery.UnitOfWork.csproj", "{4C722C40-E968-4B59-9F51-6A742351BF55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.UnitOfWork", "eGallery.UnitOfWork\eGallery.UnitOfWork.csproj", "{4C722C40-E968-4B59-9F51-6A742351BF55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Web.Razor", "eGallery.Web.Razor\eGallery.Web.Razor.csproj", "{EF5CCC21-DE63-4724-B0C9-098CF4F5DB6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Web.Razor", "eGallery.Web.Razor\eGallery.Web.Razor.csproj", "{EF5CCC21-DE63-4724-B0C9-098CF4F5DB6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Api", "eGallery.Api\eGallery.Api.csproj", "{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{EF5CCC21-DE63-4724-B0C9-098CF4F5DB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF5CCC21-DE63-4724-B0C9-098CF4F5DB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF5CCC21-DE63-4724-B0C9-098CF4F5DB6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
