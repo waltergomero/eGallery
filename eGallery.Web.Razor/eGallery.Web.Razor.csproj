@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-eGallery.Web.Razor-079B1DC9-DAA0-4E6B-86DF-9642E5D91DCB</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\eGallery.Business\eGallery.Business.csproj" />
+    <ProjectReference Include="..\eGallery.Contracts\eGallery.Contracts.csproj" />
+    <ProjectReference Include="..\eGallery.Infrastructure.BaseClass\eGallery.Infrastructure.BaseClass.csproj" />
+    <ProjectReference Include="..\eGallery.Repository\eGallery.Repository.csproj" />
+    <ProjectReference Include="..\eGallery.UnitOfWork\eGallery.UnitOfWork.csproj" />
+  </ItemGroup>
+
+</Project>
