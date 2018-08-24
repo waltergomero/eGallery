@@ -50,6 +50,7 @@ namespace eGallery.Web.Razor
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
      
             services.AddScoped<IApplicationProperties, ApplicationProperties>();
+            services.AddScoped<IStatusUnitOfWork, StatusUnitOfWork>();
             services.AddScoped<IStatusService, StatusManager>();
             services.AddScoped<IStatusRepository, StatusRepository>();
         }

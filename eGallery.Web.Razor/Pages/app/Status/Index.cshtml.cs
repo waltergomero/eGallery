@@ -22,16 +22,27 @@ namespace eGallery.Web.Razor.Pages.app.Status
             _statusUnitOfWork = statusUnitOfWork;
         }
 
-        [HttpGet]
+        public string Message { get; private set; } = "PageModel in C#";
+
+        
+        public List<StatusViewModel> status { get; set; } = new List<StatusViewModel>();
+       
         public async Task<IActionResult> OnGet()
         {
-            var query = await _statusUnitOfWork.StatusList();
-            if (query != null)
-            {
-                return this.Ok(query); ;
-            }
+            Message += $" Server time is { DateTime.Now }";
 
-            return this.NotFound();
+            status = await _statusUnitOfWork.StatusList();
+            return Page();
         }
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var query = await _statusUnitOfWork.StatusList();
+        //    return new JsonResult(query);
+
+        //}
+
     }
 }

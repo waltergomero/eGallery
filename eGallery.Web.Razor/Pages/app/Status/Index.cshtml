@@ -4,5 +4,82 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Get Products</h2>
+
+<div id="loadingProducts" style="background-color: cadetblue; display: none">
+    <p>Loading Products...</p>
+</div>
+
+<link href="~/vendor/libs/datatables/dataTables.min.css" rel="stylesheet" />
+<script src="~/vendor/libs/datatables/dataTables.min.js"></script>
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        <table id="tblStatus" class="table table-striped table-bordered dt-responsive nowrap">
+            <thead>
+                <tr>
+                    <th>Status Id</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Constant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.status)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusTypeId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusConstant)
+                        </td>
+                        <td>
+                            <a asp-page="./EditEmployee" asp-route-id="@item.StatusId">Edit</a> | 
+                            <a asp-page="./DeleteEmployee" asp-route-id="@item.StatusId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@*<script src="~/lib/jquery/dist/jquery.js"></script>*@
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "Index",
+            data: "{}",
+            dataType: "json",
+            success: function (data) {
+                for (var i = 0; i < data.d.length; i++) {
+                    $("#tblStatus").append("<tr><td> "
+                        + data.d[i].StatusId + "</td><td> "
+                        + data.d[i].StatusName + "</td><td> "
+                        + data.d[i].StatusTypeId + "</td><td> "
+                        + data.d[i].StatusConstant + "</td></tr> ");
+                             alert(JSON.stringify(data));
+                }
+
+            },
+            error: function (result) {
+                alert("Error");
+
+            }
+        });
+
+    });
+
+</script>*@
 

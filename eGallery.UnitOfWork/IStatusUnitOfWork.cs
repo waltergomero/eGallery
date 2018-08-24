@@ -8,6 +8,7 @@ namespace eGallery.UnitOfWork
 {
     public interface IStatusUnitOfWork
     {
-        Task<StatusViewModel[]> StatusList();
+        Task<List<StatusViewModel>> StatusList();
+        Task<StatusViewModel[]> StatusListArray();
     }
 }

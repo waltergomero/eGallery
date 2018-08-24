@@ -19,7 +19,25 @@ namespace eGallery.UnitOfWork
             _statusService = statusService;
 
         }
-        public async Task<StatusViewModel[]> StatusList()
+        public async Task<List<StatusViewModel>> StatusList()
+        {
+            var status = await _statusService.StatusList();
+
+            if (status != null)
+            {
+                var statusItems = status.Select(x => new StatusViewModel
+                {
+                    StatusId = x.StatusId,
+                    StatusName = x.StatusName,
+                    StatusTypeId = x.StatusTypeId,
+                    StatusConstant = x.StatusConstant
+                }).ToArray();
+                return statusItems.ToList();
+            }
+            return null;
+        }
+
+        public async Task<StatusViewModel[]> StatusListArray()
         {
             var status = await _statusService.StatusList();
 
