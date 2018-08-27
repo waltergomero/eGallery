@@ -1,0 +1,48 @@
+﻿@page
+@model eGallery.Web.Razor.Pages.app.Status.AddEditStatusModel
+
+<div class="row">
+    <div class="col-xl-4">
+    </div>
+    <div class="col-xl-4">
+        <div class="card mb-4">
+            <form  method="post" class="form-horizontal" id="statusForm">
+                <h6 class="card-header with-elements">
+                    @ViewBag.StatusTitle
+                </h6>
+                <div id="tasks-inner">
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Status.StatusId" id="StatusId" class="form-control" />
+                        <div class="form-group required row">
+                            <label class="col-form-label col-sm-3 text-sm-right">Name:</label>
+                            <div class="col-sm-9">
+                                <input asp-for="Status.StatusName" id="txtStatusName" required class="form-control" maxlength="30" />
+                                <span asp-validation-for="Status.StatusName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group required row">
+                            <label class="col-form-label col-sm-3 text-sm-right">Type Id:</label>
+                            <div class="col-sm-3">
+                                <input asp-for="Status.StatusTypeId" id="txtStatusType" type="number" required class="form-control" maxlength="2" />
+                                <span asp-validation-for="Status.StatusTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span style="color:red;" id="spCreateMessage">@ViewBag.Message</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="m-0">
+                </div>
+                <div class="card-footer" style="text-align:right;">
+                    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-xl-4">
+    </div>
+</div>

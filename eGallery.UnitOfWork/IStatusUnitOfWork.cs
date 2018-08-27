@@ -10,5 +10,7 @@ namespace eGallery.UnitOfWork
     {
         Task<List<StatusViewModel>> StatusList();
         Task<StatusViewModel[]> StatusListArray();
+        Task<StatusViewModel> StatusById(int StatusId);
+        Task SaveStatusData(string StatusName, int StatusId, int StatusType);
     }
 }

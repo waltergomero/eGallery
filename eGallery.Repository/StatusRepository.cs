@@ -46,5 +46,40 @@ namespace eGallery.Repository
             }
             return status.ToArray();
         }
+
+
+        public async Task<StatusModel> StatusById(int StatusId)
+        {
+            using (var sqlConnection = new SqlConnection(connectionString))
+            {
+                await sqlConnection.OpenAsync();
+                var dynamicParameters = new DynamicParameters();
+                dynamicParameters.Add("@p_intStatusId", StatusId);
+                var query = await sqlConnection.QuerySingleOrDefaultAsync<StatusModel>("usp_StatusById", dynamicParameters, commandType: CommandType.StoredProcedure);
+                return query;
+            }
+        }
+
+        public async Task SaveStatusData(string StatusName, int StatusId, int StatusType)
+        {
+            using (var sqlConnection = new SqlConnection(connectionString))
+            {
+                await sqlConnection.OpenAsync();
+                var dynamicParameters = new DynamicParameters();
+                if (StatusId > 0)
+                {
+                    dynamicParameters.Add("@p_intStatusId", StatusId);
+                }
+
+                dynamicParameters.Add("@p_chrStatusName", StatusName);
+                dynamicParameters.Add("@p_intStatusTypeId", StatusType);
+
+                if (StatusId == 0)
+                    await sqlConnection.ExecuteAsync("usp_StatusAdd", dynamicParameters, commandType: CommandType.StoredProcedure);
+                else
+                    await sqlConnection.ExecuteAsync("usp_StatusUpdate", dynamicParameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
     }
 }

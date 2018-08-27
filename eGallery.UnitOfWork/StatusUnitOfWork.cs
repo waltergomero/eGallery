@@ -55,5 +55,24 @@ namespace eGallery.UnitOfWork
             return null;
         }
 
+        public async Task<StatusViewModel> StatusById(int StatusId)
+        {
+            var s = await _statusService.StatusById(StatusId);
+
+            StatusViewModel sVM = new StatusViewModel();
+            sVM.StatusId = s.StatusId;
+            sVM.StatusName = s.StatusName;
+            sVM.StatusTypeId = s.StatusTypeId;
+
+            return sVM;
+
+
+        }
+
+        public async Task SaveStatusData(string StatusName, int StatusId, int StatusType)
+        {
+            await _statusService.SaveStatusData(StatusName, StatusId, StatusType);
+        }
+
     }
 }

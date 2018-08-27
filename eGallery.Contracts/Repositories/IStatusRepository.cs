@@ -9,5 +9,7 @@ namespace eGallery.Contracts.Repositories
     public interface IStatusRepository
     {
         Task<StatusModel[]> StatusList();
+        Task<StatusModel> StatusById(int StatusId);
+        Task SaveStatusData(string StatusName, int StatusId, int StatusType);
     }
 }

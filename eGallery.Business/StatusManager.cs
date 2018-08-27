@@ -23,5 +23,16 @@ namespace eGallery.Business
             return await _statusRepository.StatusList();
 
         }
+
+        public async Task<StatusModel> StatusById(int StatusId)
+        {
+            return await _statusRepository.StatusById(StatusId);
+
+        }
+
+        public async Task SaveStatusData(string StatusName, int StatusId, int StatusType)
+        {
+            await _statusRepository.SaveStatusData(StatusName, StatusId, StatusType);
+        }
     }
 }
