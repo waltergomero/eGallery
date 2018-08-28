@@ -38,6 +38,10 @@ namespace eGallery.Web.Razor.Pages.app.Status
             else
             {
                 Status = await _statusUnitOfWork.StatusById(Id);
+                if (Status == null)
+                {
+                    Message = "No records found.";
+                }
                 return Page();
 
             }
@@ -48,18 +52,22 @@ namespace eGallery.Web.Razor.Pages.app.Status
         {
             try
             {
-                int StatusId = Status.StatusId;
-                string StatusName = Status.StatusName;
-                int StatusTypeId = Status.StatusTypeId;
+                if (!ModelState.IsValid)
+                    return Page();
+                else
+                {
+                    int StatusId = Status.StatusId;
+                    string StatusName = Status.StatusName;
+                    int StatusTypeId = Status.StatusTypeId;
 
-                await this._statusUnitOfWork.SaveStatusData(StatusName, StatusId, StatusTypeId);
+                    await this._statusUnitOfWork.SaveStatusData(StatusName, StatusId, StatusTypeId);
+                }
 
             }
             catch (Exception ex)
             {
                 Message = ex.Message;
             }
-            //Redirecting back to Index page after successfull save
             return RedirectToPage("./Index");
 
         }

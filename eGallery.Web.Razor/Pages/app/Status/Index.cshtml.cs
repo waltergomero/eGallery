@@ -32,6 +32,7 @@ namespace eGallery.Web.Razor.Pages.app.Status
             Message += $" Server time is { DateTime.Now }";
 
             status = await _statusUnitOfWork.StatusList();
+            
             return Page();
         }
 
