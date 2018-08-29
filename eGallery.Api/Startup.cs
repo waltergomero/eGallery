@@ -10,6 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using eGallery.Contracts.Services;
+using eGallery.Contracts.Repositories;
+using eGallery.Infrastructure.BaseClass.ApplicationProperties;
+using eGallery.Business;
+using eGallery.Repository;
 
 namespace eGallery.Api
 {
@@ -26,6 +31,10 @@ namespace eGallery.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddScoped<IApplicationProperties, ApplicationProperties>();
+            services.AddScoped<IStatusService, StatusManager>();
+            services.AddScoped<IStatusRepository, StatusRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

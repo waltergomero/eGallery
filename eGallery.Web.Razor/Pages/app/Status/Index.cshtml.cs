@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using eGallery.UnitOfWork;
 using eGallery.UnitOfWork.ViewModels;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System.Reflection;
+
 
 namespace eGallery.Web.Razor.Pages.app.Status
 {
@@ -22,17 +18,23 @@ namespace eGallery.Web.Razor.Pages.app.Status
             _statusUnitOfWork = statusUnitOfWork;
         }
 
-        public string Message { get; private set; } = "PageModel in C#";
+        public string Message { get; private set; } = "";
 
         
         public List<StatusViewModel> status { get; set; } = new List<StatusViewModel>();
        
         public async Task<IActionResult> OnGet()
         {
-            Message += $" Server time is { DateTime.Now }";
+            // Message += $" Server time is { DateTime.Now }";
+            try
+            {
+                status = await _statusUnitOfWork.StatusList();
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+            }
 
-            status = await _statusUnitOfWork.StatusList();
-            
             return Page();
         }
 

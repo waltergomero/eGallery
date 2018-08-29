@@ -1,7 +1,7 @@
 ﻿@page
 @model eGallery.Web.Razor.Pages.app.Status.IndexModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Status";
 }
  @Model.Message
 <div id="loadingProducts" style="background-color: cadetblue; display: none">
@@ -13,7 +13,7 @@
         <div class="box box-info " id="nopcommerce-news-box">
             <div class="box-header with-border clearfix">
                 <div class="box-title">
-                    <i class="fa fa-newspaper-o"></i>
+                    <i class="ion ion-ios-aperture"></i>
                     Status Table
                 </div>
                 <div class="box-tools pull-right">
@@ -27,7 +27,6 @@
                             <th>Status Id</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Constant</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -45,11 +44,7 @@
                                     @Html.DisplayFor(modelItem => item.StatusTypeId)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.StatusConstant)
-                                </td>
-                                <td>
-                                    <a asp-page="./AddEditStatus" asp-route-id="@item.StatusId">Edit</a> | 
-                                    <a asp-page="./DeleteEmployee" asp-route-id="@item.StatusId">Delete</a>
+                                    <a asp-page="./AddEditStatus" asp-route-id="@item.StatusId">Edit</a>
                                 </td>
                             </tr>
                         }
@@ -60,7 +55,7 @@
     </div>
 </div>
 
-<div id="editForm"></div>
+@*<div id="editForm"></div>
 <input type="hidden" id="txtStatusId" value="@ViewBag.StatusId" />
 
 <script>
@@ -190,4 +185,4 @@
         //}
     });
 
-</script>
+</script>*@

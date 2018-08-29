@@ -29,8 +29,7 @@ namespace eGallery.UnitOfWork
                 {
                     StatusId = x.StatusId,
                     StatusName = x.StatusName,
-                    StatusTypeId = x.StatusTypeId,
-                    StatusConstant = x.StatusConstant
+                    StatusTypeId = x.StatusTypeId
                 }).ToArray();
                 return statusItems.ToList();
             }
@@ -47,8 +46,7 @@ namespace eGallery.UnitOfWork
                 {
                     StatusId = x.StatusId,
                     StatusName = x.StatusName,
-                    StatusTypeId = x.StatusTypeId,
-                    StatusConstant = x.StatusConstant                 
+                    StatusTypeId = x.StatusTypeId         
                 }).ToArray();
                 return statusItems.ToArray();
             }

@@ -40,7 +40,6 @@ namespace eGallery.Repository
                     _status.StatusId = dataReader.GetValueOrDefault<int>("StatusId");
                     _status.StatusName = dataReader.GetValueOrDefault<string>("StatusName");
                     _status.StatusTypeId = dataReader.GetValueOrDefault<int>("StatusTypeId");
-                    _status.StatusConstant = dataReader.GetValueOrDefault<string>("StatusConstant");
                     status.Add(_status);
                 }
             }
