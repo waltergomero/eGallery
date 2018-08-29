@@ -20,4 +20,10 @@
     <ProjectReference Include="..\eGallery.UnitOfWork\eGallery.UnitOfWork.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Gallery\" />
+    <Folder Include="wwwroot\Gallery\Thumb\" />
+    <Folder Include="wwwroot\Gallery\Original\" />
+  </ItemGroup>
+
 </Project>
