@@ -5,10 +5,10 @@
 }
 
 <div class="row">
-    <div class="col-xl-4">
+    <div class="col-xl-3">
     </div>
-    <div class="col-xl-4">
-        <div class="card mb-4">
+    <div class="col-xl-6">
+        <div class="card mb-6">
             <form method="post" class="form-horizontal" id="statusForm">
                 <h6 class="card-header with-elements">
                     @ViewBag.CategoryTitle
@@ -16,7 +16,7 @@
                 <div id="tasks-inner">
                     <div class="card-body">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="Category.CategoryId" id="StatusId" class="form-control" />
+                        <input type="hidden" asp-for="Category.CategoryId" id="CategoryId" class="form-control" />
                         <div class="form-group required row">
                             <label class="col-form-label col-sm-3 text-sm-right">Name:</label>
                             <div class="col-sm-9">
@@ -25,32 +25,30 @@
                             </div>
                         </div>
                         <div class="form-group required row">
-                            <label class="col-form-label col-sm-3 text-sm-right">Parent Category Id:</label>
+                            <label class="col-form-label col-sm-3 text-sm-right">Parent Category:</label>
                             <div class="col-sm-3">
-                                <input asp-for="Category.ParentCategoryId" id="txtParentCategoryId" required class="form-control" maxlength="2" />
+                                <select class="form-control" asp-for="Category.ParentCategoryId" asp-items="Model.parentCategoryIdSelected">
+                                    <option value="0">[None]</option>
+                                </select>
                                 <span asp-validation-for="Category.ParentCategoryId" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-group required row">
                             <label class="col-form-label col-sm-3 text-sm-right">Description:</label>
-                            <div class="col-sm-3">
-                                <input asp-for="Category.Description" id="txtDescription" type="number" required class="form-control" maxlength="2" />
-                                <span asp-validation-for="Category.Description" class="text-danger"></span>
+                            <div class="col-sm-9">
+                                <input asp-for="Category.Description" id="txtDescription" class="form-control" maxlength="120" multiple />
                             </div>
                         </div>
-                        <div class="form-group required row">
+                        @if(Model.Title == "Edit")
+                        {
+                        <div class="form-group  required row">
                             <label class="col-form-label col-sm-3 text-sm-right">Status:</label>
-                            <div class="col-sm-3">
-                                <select class="form-control">
-                                    <option value="">-- Select Status --</option>
-                                    @foreach (var status in statusList)
-                                    {
-                                        <option value="@status.StatusId">@status.StatusName</option>
-                                    }
+                            <div class="col-md-3">
+                                <select  class="form-control" asp-for="Category.StatusId" asp-items="Model.statusIdSelected">
                                 </select>
-                                <span asp-validation-for="@status.StatusId" class="text-danger"></span>
                             </div>
                         </div>
+                        }
                         <div class="form-group">
                             <div class="col-md-12">
                                 <span style="color:red;" id="spCreateMessage">@Model.Message</span>
@@ -66,7 +64,7 @@
             </form>
         </div>
     </div>
-    <div class="col-xl-4">
+    <div class="col-xl-3">
     </div>
 </div>
 

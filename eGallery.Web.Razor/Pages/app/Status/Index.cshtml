@@ -27,7 +27,6 @@
                             <th>Status Id</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,13 +37,10 @@
                                     @Html.DisplayFor(modelItem => item.StatusId)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.StatusName)
+                                    <a asp-page="./AddEditStatus" asp-route-id="@item.StatusId">@item.StatusName</a>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.StatusTypeId)
-                                </td>
-                                <td>
-                                    <a asp-page="./AddEditStatus" asp-route-id="@item.StatusId">Edit</a>
                                 </td>
                             </tr>
                         }

@@ -10,7 +10,7 @@ namespace eGallery.Contracts.Services
     {
         Task<CategoryModel[]> CategoryList();
         Task<CategoryModel> CategoryById(int CategoryId);
-        Task SaveCategoryData(int CategoryId, string CategoryName, string Description, string CategoryImage, int ParentCategoryId, int StatusId);
+        Task SaveCategoryData(int CategoryId, string CategoryName, string Description, int ParentCategoryId, int StatusId);
 
     }
 }

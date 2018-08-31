@@ -11,6 +11,6 @@ namespace eGallery.UnitOfWork
         Task<List<CategoryViewModel>> CategoryList();
         Task<CategoryViewModel[]> CategoryListArray();
         Task<CategoryViewModel> CategoryById(int StatusId);
-        Task SaveCategoryData(int CategoryId, string CategoryName, string Description, string CategoryImage, int ParentCategoryId, int StatusId);
+        Task SaveCategoryData(int CategoryId, string CategoryName, string Description, int ParentCategoryId, int StatusId);
     }
 }

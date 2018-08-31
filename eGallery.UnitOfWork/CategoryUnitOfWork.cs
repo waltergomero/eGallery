@@ -75,9 +75,9 @@ namespace eGallery.UnitOfWork
             return cVM;
         }
 
-        public async Task SaveCategoryData(int CategoryId, string CategoryName, string Description, string CategoryImage, int ParentCategoryId, int StatusId)
+        public async Task SaveCategoryData(int CategoryId, string CategoryName, string Description, int ParentCategoryId, int StatusId)
         {
-            await _categoryService.SaveCategoryData(CategoryId, CategoryName, Description, CategoryImage, ParentCategoryId, StatusId);
+            await _categoryService.SaveCategoryData(CategoryId, CategoryName, Description, ParentCategoryId, StatusId);
         }
 
     }

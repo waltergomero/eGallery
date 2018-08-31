@@ -41,7 +41,7 @@
                                 @Html.DisplayFor(modelItem => item.CategoryId)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.CategoryName)
+                                <a asp-page="./AddEditCategory" asp-route-id="@item.CategoryId">@item.CategoryName</a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ParentCategoryId)
@@ -53,7 +53,7 @@
                                 @Html.DisplayFor(modelItem => item.StatusId)
                             </td>
                             <td>
-                                <a asp-page="./AddEditCategory" asp-route-id="@item.CategoryId">Edit</a> | 
+                                <a asp-page="./Index" asp-route-id="@item.CategoryId" class="btn btn-coffe btn-xs">Delete</a>
                             </td>
                         </tr>
                         }

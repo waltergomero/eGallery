@@ -61,14 +61,16 @@ namespace eGallery.Web.Razor.Pages.app.Status
                     int StatusTypeId = Status.StatusTypeId;
 
                     await this._statusUnitOfWork.SaveStatusData(StatusName, StatusId, StatusTypeId);
+                    return RedirectToPage("./Index");
                 }
 
             }
             catch (Exception ex)
             {
                 Message = ex.Message;
+                return Page();
             }
-            return RedirectToPage("./Index");
+            
 
         }
     }

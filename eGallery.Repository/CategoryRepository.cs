@@ -55,24 +55,23 @@ namespace eGallery.Repository
             }
         }
 
-        public async Task SaveCategoryData(int CategoryId, string CategoryName, string Description, string CategoryImage, int ParentCategoryId, int StatusId)
+        public async Task SaveCategoryData(int CategoryId, string CategoryName, string Description, int ParentCategoryId, int StatusId)
         {
             using (var sqlConnection = new SqlConnection(connectionString))
             {
                 await sqlConnection.OpenAsync();
                 var dynamicParameters = new DynamicParameters();
-                if (StatusId > 0)
+                if (CategoryId > 0)
                 {
                     dynamicParameters.Add("@p_intCategoryId", CategoryId);
                 }
 
                 dynamicParameters.Add("@p_chrCategoryName", CategoryName);
                 dynamicParameters.Add("@p_chrDescription", Description);
-                dynamicParameters.Add("@p_chrCategoryImage", CategoryImage);
                 dynamicParameters.Add("@p_intParentCategoryId", ParentCategoryId);
                 dynamicParameters.Add("@p_intStatusId", StatusId);
 
-                if (StatusId == 0)
+                if (CategoryId == 0)
                     await sqlConnection.ExecuteAsync("usp_CategoryAdd", dynamicParameters, commandType: CommandType.StoredProcedure);
                 else
                     await sqlConnection.ExecuteAsync("usp_CategoryUpdate", dynamicParameters, commandType: CommandType.StoredProcedure);
