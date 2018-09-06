@@ -82,8 +82,6 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                 if (ImageFile != null) // ImageFile = The IFormFile that was uploaded
                 {
                     string format = "";
-                    //ImageFile.CopyTo(new FileStream(uploadOriginalPath, FileMode.Create));
-
                     var imageName = GetUniqueName(ImageFile.FileName);
                     string ext = System.IO.Path.GetExtension(imageName).ToLower();
 

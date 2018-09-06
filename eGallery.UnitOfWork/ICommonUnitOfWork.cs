@@ -9,5 +9,6 @@ namespace eGallery.UnitOfWork
     public interface ICommonUnitOfWork
     {
         List<SelectListItem> CategoryDropDownList(List<CategoryViewModel> categoryList, string categoryId, string categoryName);
+
     }
 }
