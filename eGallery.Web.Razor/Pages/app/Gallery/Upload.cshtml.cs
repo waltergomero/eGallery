@@ -135,7 +135,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                         newThumbWidth = (int)Math.Round(image.Width / resizeThumbFactor);
                         newThumbHeight = (int)Math.Round(image.Height / resizeThumbFactor);
 
-                        ResizeAndSaveImage(ImageFile.OpenReadStream(), resizedPath, newThumbWidth, newThumbHeight);
+                        ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newThumbWidth, newThumbHeight);
                         //Generate postal size images 
                         // var resizedImage = CropImage(image, 0, 0, image.Width, image.Height, newWidth, newHeight);
                         // SaveImage(image, resizedPath, resizedImage, newWidth, newHeight);
