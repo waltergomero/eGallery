@@ -11,7 +11,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using System.Drawing;
+//using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace eGallery.Web.Razor.Pages.app.Gallery
 {
@@ -46,7 +49,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
         //Your existing code for properties goes here
         public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files)
         {
-            string struserId = "";
+            string struserId = "208";
             string imageGallery = "Gallery";
             string originalGallery = "Original";
             string thumbGallery = "Thumb";
@@ -54,13 +57,13 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             var webRoot = _env.WebRootPath;
             var path = System.IO.Path.Combine(webRoot, imageGallery);
 
-            string uploadPath = path; //this is where resized images will be stored.
+            string uploadResisedPath = path; //this is where resized images will be stored.
             string uploadOriginalPath = path + "\\" + originalGallery;
             string uploadThumbPath = path + "\\" + thumbGallery;
 
-            if (!Directory.Exists(uploadPath))
+            if (!Directory.Exists(uploadResisedPath))
             {
-                Directory.CreateDirectory(uploadPath);
+                Directory.CreateDirectory(uploadResisedPath);
             }
             if (!Directory.Exists(uploadOriginalPath))
             {
@@ -82,25 +85,17 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                 if (ImageFile != null) // ImageFile = The IFormFile that was uploaded
                 {
                     string format = "";
-                    var imageName = GetUniqueName(ImageFile.FileName);
-                    string ext = System.IO.Path.GetExtension(imageName).ToLower();
 
-                    var ImageID = _productService.NextImageId();
+                    //var imageName = ImageFile.FileName;                   
+                    string ext = System.IO.Path.GetExtension(ImageFile.FileName).ToLower();
 
-                    string nextImageId = "";
+                    string iName = ImageFile.FileName.Replace(ImageFile.FileName, struserId);
+                    iName = iName + ext;
 
-                    foreach (var i in ImageID)
-                    {
-                        nextImageId = i.NextImageId.ToString();
-                    }
-
-                    string iName = "";
-                    iName = imageName.Replace(imageName, nextImageId);
-                    iName = imageName + ext;
-
-                    string orignalPath = Path.Combine(uploadOriginalPath, iName);
-                    string resizedPath = Path.Combine(uploadPath, iName);                   
-                    string thumbPath = Path.Combine(uploadThumbPath, iName);
+                    var newName = GetUniqueName(iName);
+                    string orignalPath = Path.Combine(uploadOriginalPath, newName);
+                    string resizedPath = Path.Combine(uploadResisedPath, newName);                   
+                    string thumbPath = Path.Combine(uploadThumbPath, newName);
                 
                     try
                     {
@@ -108,7 +103,8 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                         {
                             await ImageFile.CopyToAsync(fs);
                         }
-                        var image = Image.FromStream(ImageFile.OpenReadStream());
+                        // var image = Image.FromStream(ImageFile.OpenReadStream());
+                        Image<Rgba32> image = Image.Load(ImageFile.OpenReadStream());
                         int maxSize = 750;
                         int thumbSize = 200;
                         int newWidth = 0;
@@ -134,16 +130,19 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                         newWidth = (int)Math.Round(image.Width / resizeFactor);
                         newHeight = (int)Math.Round(image.Height / resizeFactor);
 
+                        ResizeAndSaveImage(ImageFile.OpenReadStream(), resizedPath, newWidth, newHeight);
+
                         newThumbWidth = (int)Math.Round(image.Width / resizeThumbFactor);
                         newThumbHeight = (int)Math.Round(image.Height / resizeThumbFactor);
 
+                        ResizeAndSaveImage(ImageFile.OpenReadStream(), resizedPath, newThumbWidth, newThumbHeight);
                         //Generate postal size images 
-                        var resizedImage = CropImage(image, 0, 0, image.Width, image.Height, newWidth, newHeight);
-                        SaveImage(image, resizedPath, resizedImage, newWidth, newHeight);
+                        // var resizedImage = CropImage(image, 0, 0, image.Width, image.Height, newWidth, newHeight);
+                        // SaveImage(image, resizedPath, resizedImage, newWidth, newHeight);
 
                         //Generate thumb size images 
-                        var resizedThumbImage = CropImage(image, 0, 0, image.Width, image.Height, newThumbWidth, newThumbHeight);
-                        SaveImage(image, thumbPath, resizedThumbImage, newThumbWidth, newThumbHeight);
+                        // var resizedThumbImage = CropImage(image, 0, 0, image.Width, image.Height, newThumbWidth, newThumbHeight);
+                        // SaveImage(image, thumbPath, resizedThumbImage, newThumbWidth, newThumbHeight);
 
                         //save information to the database
                         //await this._productService.ProductImageAdd(ProductId, imageName, format);
@@ -161,33 +160,43 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
         private string GetUniqueName(string fileName)
         {
             fileName = Path.GetFileName(fileName);
-            return Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(fileName);
+            return Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString().Substring(0, 6) + Path.GetExtension(fileName);
         }
 
-        private void SaveImage(Image image, string path, Image resizedImage, int newWidth, int newHeight)
+        public static void ResizeAndSaveImage(Stream stream, string filename, int newWidth, int newHeight)
         {
-            using (Graphics graphics = Graphics.FromImage(resizedImage))
+          
+            using (Image<Rgba32> image = Image.Load(stream))
             {
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+                image.Mutate(x => x.Resize(newWidth, newHeight));
+                image.Save(filename); // Automatic encoder selected based on extension.
             }
-
-            resizedImage.Save(path);
-            resizedImage.Dispose();
         }
 
-        private Image CropImage(Image sourceImage, int sourceX, int sourceY, int sourceWidth, int sourceHeight, int destinationWidth, int destinationHeight)
-        {
-            Image destinationImage = new Bitmap(destinationWidth, destinationHeight);
+        //private void SaveImage(Image image, string path, Image resizedImage, int newWidth, int newHeight)
+        //{
+        //    using (Graphics graphics = Graphics.FromImage(resizedImage))
+        //    {
+        //        graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+        //    }
 
-            using (Graphics g = Graphics.FromImage(destinationImage))
-                g.DrawImage(
-                  sourceImage,
-                  new Rectangle(0, 0, destinationWidth, destinationHeight),
-                  new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-                  GraphicsUnit.Pixel
-                );
+        //    resizedImage.Save(path);
+        //    resizedImage.Dispose();
+        //}
 
-            return destinationImage;
-        }
+        //private Image CropImage(Image sourceImage, int sourceX, int sourceY, int sourceWidth, int sourceHeight, int destinationWidth, int destinationHeight)
+        //{
+        //    Image destinationImage = new Bitmap(destinationWidth, destinationHeight);
+
+        //    using (Graphics g = Graphics.FromImage(destinationImage))
+        //        g.DrawImage(
+        //          sourceImage,
+        //          new Rectangle(0, 0, destinationWidth, destinationHeight),
+        //          new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
+        //          GraphicsUnit.Pixel
+        //        );
+
+        //    return destinationImage;
+        //}
     }
 }
