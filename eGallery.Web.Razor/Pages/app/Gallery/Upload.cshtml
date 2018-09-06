@@ -4,5 +4,74 @@
     ViewData["Title"] = "Upload";
 }
 
-<h2>Upload</h2>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-info " id="nopcommerce-news-box">
+                    <div class="box-header with-border clearfix">
+                        <div class="box-title">
+                            <i class="fa fa-file-image-o"></i>
+                            Upload Images
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-5">
+                                    <input type="file" id="files" name="files" multiple class="btn btn-default" />
+                                </div>
+                            </div>
+                            <div class="form-group required row">
+                                <label class="col-form-label col-sm-1 text-sm-right">Images:</label>
+                                <div class="col-sm-11">
+                                    <div class="gallery" id="dGallery" style="margin-bottom:10px;"></div>
+                                </div>
+                            </div>
+                            <div class="form-group required row">
+                                <label class="col-form-label col-sm-1 text-sm-right">Category:</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" id="ddCategoryList" asp-items="Model.Categories">
+                                        <option value="0"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-5">
+                                    <div class=" pull-right">
+                                        <a asp-action="Index" class="btn btn-coffe">Back to List</a>
+                                        <button type="submit" value="Upload Images" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function readURL(input) {
+        for (var i = 0; i < input.files.length; i++) {
+            if (input.files[i]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var img = $('<img id="dynamic" style="width:150px; margin-right:5px;">');
+                    img.attr('src', e.target.result);
+                    img.appendTo('#dGallery');
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    }
+
+    $("#files").change(function () {
+        readURL(this);
+    });
+
+</script>

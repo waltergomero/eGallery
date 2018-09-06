@@ -52,17 +52,12 @@ namespace eGallery.Web.Razor.Pages.app.Status
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return Page();
-                else
-                {
                     int StatusId = Status.StatusId;
                     string StatusName = Status.StatusName;
                     int StatusTypeId = Status.StatusTypeId;
 
                     await this._statusUnitOfWork.SaveStatusData(StatusName, StatusId, StatusTypeId);
                     return RedirectToPage("./Index");
-                }
 
             }
             catch (Exception ex)

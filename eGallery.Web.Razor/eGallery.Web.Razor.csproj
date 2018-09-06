@@ -6,10 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Gallery\**" />
+    <Content Remove="wwwroot\Gallery\**" />
+    <EmbeddedResource Remove="wwwroot\Gallery\**" />
+    <None Remove="wwwroot\Gallery\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,12 +26,6 @@
     <ProjectReference Include="..\eGallery.Infrastructure.BaseClass\eGallery.Infrastructure.BaseClass.csproj" />
     <ProjectReference Include="..\eGallery.Repository\eGallery.Repository.csproj" />
     <ProjectReference Include="..\eGallery.UnitOfWork\eGallery.UnitOfWork.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Gallery\" />
-    <Folder Include="wwwroot\Gallery\Thumb\" />
-    <Folder Include="wwwroot\Gallery\Original\" />
   </ItemGroup>
 
 </Project>

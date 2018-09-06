@@ -23,12 +23,6 @@ namespace eGallery.Repository
 
         public async Task<StatusModel[]> StatusList()
         {
-            //using (var sqlConnection = new SqlConnection(connectionString))
-            //{
-            //    await sqlConnection.OpenAsync();
-            //    var query = await sqlConnection.QueryAsync<StatusModel[]>("usp_StatusList", null, commandType: CommandType.StoredProcedure);
-            //    return query;
-            //}
             List<StatusModel> status = new List<StatusModel>();
             StatusModel _status = null;
             var parameters = new SqlParameter[0];
@@ -46,6 +40,24 @@ namespace eGallery.Repository
             return status.ToArray();
         }
 
+        public async Task<StatusModel[]> StatusListByType(int TypeId)
+        {
+            List<StatusModel> status = new List<StatusModel>();
+            StatusModel _status = null;
+            var parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("@p_intStatusTypeId", TypeId);
+            using (SqlDataReader dataReader = await this.ExecuteReader("usp_StatusListByType", parameters))
+            {
+                while (dataReader.Read())
+                {
+                    _status = new StatusModel();
+                    _status.StatusId = dataReader.GetValueOrDefault<int>("StatusId");
+                    _status.StatusName = dataReader.GetValueOrDefault<string>("StatusName");
+                    status.Add(_status);
+                }
+            }
+            return status.ToArray();
+        }
 
         public async Task<StatusModel> StatusById(int StatusId)
         {

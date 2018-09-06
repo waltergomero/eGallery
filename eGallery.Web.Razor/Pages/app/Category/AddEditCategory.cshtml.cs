@@ -15,11 +15,13 @@ namespace eGallery.Web.Razor.Pages.app.Category
     {
         private readonly ICategoryUnitOfWork _categoryUnitOfWork;
         private readonly IStatusUnitOfWork _statusUnitOfWork;
+        private readonly ICommonUnitOfWork _commonUnitOfWork;
 
-        public AddEditCategoryModel(ICategoryUnitOfWork categoryUnitOfWork, IStatusUnitOfWork statusUnitOfWork)
+        public AddEditCategoryModel(ICategoryUnitOfWork categoryUnitOfWork, IStatusUnitOfWork statusUnitOfWork, ICommonUnitOfWork commonUnitOfWork)
         {
             _categoryUnitOfWork = categoryUnitOfWork;
             _statusUnitOfWork = statusUnitOfWork;
+            _commonUnitOfWork = commonUnitOfWork;
         }
 
         public string Message { get; private set; } = "";
@@ -58,7 +60,7 @@ namespace eGallery.Web.Razor.Pages.app.Category
 
             }
             categoryList = await _categoryUnitOfWork.CategoryList();
-            CategoryDropDownList(categoryList, "CategoryId", "CategoryName", selParentCategoryId);
+            parentCategoryIdSelected = _commonUnitOfWork.CategoryDropDownList(categoryList, "CategoryId", "CategoryName");
 
             return Page();
         }
@@ -69,11 +71,7 @@ namespace eGallery.Web.Razor.Pages.app.Category
             statusIdSelected = selectList.ToList();
         }
 
-        public void CategoryDropDownList(List<CategoryViewModel> categoryList, string categoryId, string categoryName, int SelParentCategoryId)
-        {
-            var selectList = new SelectList(categoryList, categoryId, categoryName, SelParentCategoryId);
-            parentCategoryIdSelected = selectList.ToList();
-        }
+ 
 
         //Method to save the data back to database
         public async Task<IActionResult> OnPostAsync()

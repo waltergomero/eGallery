@@ -24,6 +24,11 @@ namespace eGallery.Business
 
         }
 
+        public async Task<StatusModel[]> StatusListByType(int TypeId)
+        {
+            return await _statusRepository.StatusListByType(TypeId);
+
+        }
         public async Task<StatusModel> StatusById(int StatusId)
         {
             return await _statusRepository.StatusById(StatusId);

@@ -36,6 +36,22 @@ namespace eGallery.UnitOfWork
             return null;
         }
 
+        public async Task<List<StatusViewModel>> StatusListByType(int TypeId)
+        {
+            var status = await _statusService.StatusListByType(TypeId);
+
+            if (status != null)
+            {
+                var statusItems = status.Select(x => new StatusViewModel
+                {
+                    StatusId = x.StatusId,
+                    StatusName = x.StatusName
+                }).ToArray();
+                return statusItems.ToList();
+            }
+            return null;
+        }
+
         public async Task<StatusViewModel[]> StatusListArray()
         {
             var status = await _statusService.StatusList();

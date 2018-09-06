@@ -56,6 +56,7 @@ namespace eGallery.Web.Razor
             services.AddScoped<ICategoryUnitOfWork, CategoryUnitOfWork>();
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICommonUnitOfWork, CommonUnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
