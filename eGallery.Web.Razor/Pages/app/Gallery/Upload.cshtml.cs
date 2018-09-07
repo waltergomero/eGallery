@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 //using System.Drawing;
-using SixLabors.ImageSharp;
+ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -103,46 +103,62 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                         {
                             await ImageFile.CopyToAsync(fs);
                         }
-                        // var image = Image.FromStream(ImageFile.OpenReadStream());
+                         //var image = Image.FromStream(ImageFile.OpenReadStream());
                         Image<Rgba32> image = Image.Load(ImageFile.OpenReadStream());
-                        int maxSize = 750;
+
+                        // Get the image's original width and height
+                        int originalWidth = image.Width;
+                        int originalHeight = image.Height;
+                        int maxSize = 860;
                         int thumbSize = 200;
-                        int newWidth = 0;
-                        int newHeight = 0;
-                        int newThumbWidth = 0;
-                        int newThumbHeight = 0;
-                        double resizeFactor = 0;
-                        double resizeThumbFactor = 0;
 
-                        if (image.Width > image.Height)
-                        {
-                            resizeFactor = image.Width / maxSize;
-                            resizeThumbFactor = image.Width / thumbSize;
-                            format = "l";
-                        }
-                        else
-                        {
-                            resizeFactor = image.Height / maxSize;
-                            resizeThumbFactor = image.Height / thumbSize;
-                            format = "p";
-                        }
+                        // To preserve the aspect ratio
+                        float ratioX = (float)maxSize / (float)originalWidth;
+                        float ratioY = (float)maxSize / (float)originalHeight;
+                        float ratio = Math.Min(ratioX, ratioY);
 
-                        newWidth = (int)Math.Round(image.Width / resizeFactor);
-                        newHeight = (int)Math.Round(image.Height / resizeFactor);
+                        // New width and height based on aspect ratio
+                        int newWidth = (int)(originalWidth * ratio);
+                        int newHeight = (int)(originalHeight * ratio);
+
+                        //int maxSize = 860;
+                        //int thumbSize = 200;
+                        //int newWidth = 0;
+                        //int newHeight = 0;
+                        //int newThumbWidth = 0;
+                        //int newThumbHeight = 0;
+                        //double resizeFactor = 0;
+                        //double resizeThumbFactor = 0;
+
+                        //if (image.Width > image.Height)
+                        //{
+                        //    resizeFactor = image.Width / maxSize;
+                        //    resizeThumbFactor = image.Width / thumbSize;
+                        //    format = "l";
+                        //}
+                        //else
+                        //{
+                        //    resizeFactor = image.Height / maxSize;
+                        //    resizeThumbFactor = image.Height / thumbSize;
+                        //    format = "p";
+                        //}
+
+                        //newWidth = (int)Math.Round(image.Width / resizeFactor);
+                        //newHeight = (int)Math.Round(image.Height / resizeFactor);
 
                         ResizeAndSaveImage(ImageFile.OpenReadStream(), resizedPath, newWidth, newHeight);
 
-                        newThumbWidth = (int)Math.Round(image.Width / resizeThumbFactor);
-                        newThumbHeight = (int)Math.Round(image.Height / resizeThumbFactor);
+                        //newThumbWidth = (int)Math.Round(image.Width / resizeThumbFactor);
+                        //newThumbHeight = (int)Math.Round(image.Height / resizeThumbFactor);
 
-                        ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newThumbWidth, newThumbHeight);
-                        //Generate postal size images 
-                        // var resizedImage = CropImage(image, 0, 0, image.Width, image.Height, newWidth, newHeight);
-                        // SaveImage(image, resizedPath, resizedImage, newWidth, newHeight);
+                        //ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newThumbWidth, newThumbHeight);
+                        //////Generate postal size images 
+                        ////var resizedImage = CropImage(image, 0, 0, image.Width, image.Height, newWidth, newHeight);
+                        ////SaveImage(image, resizedPath, resizedImage, newWidth, newHeight);
 
-                        //Generate thumb size images 
-                        // var resizedThumbImage = CropImage(image, 0, 0, image.Width, image.Height, newThumbWidth, newThumbHeight);
-                        // SaveImage(image, thumbPath, resizedThumbImage, newThumbWidth, newThumbHeight);
+                        //////Generate thumb size images 
+                        ////var resizedThumbImage = CropImage(image, 0, 0, image.Width, image.Height, newThumbWidth, newThumbHeight);
+                        ////SaveImage(image, thumbPath, resizedThumbImage, newThumbWidth, newThumbHeight);
 
                         //save information to the database
                         //await this._productService.ProductImageAdd(ProductId, imageName, format);
@@ -165,7 +181,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
 
         public static void ResizeAndSaveImage(Stream stream, string filename, int newWidth, int newHeight)
         {
-          
+
             using (Image<Rgba32> image = Image.Load(stream))
             {
                 image.Mutate(x => x.Resize(newWidth, newHeight));
@@ -173,30 +189,55 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             }
         }
 
-        //private void SaveImage(Image image, string path, Image resizedImage, int newWidth, int newHeight)
+        ////private void SaveImage(Image image, string path, Image resizedImage, int newWidth, int newHeight)
+        ////{
+        ////    using (Graphics graphics = Graphics.FromImage(resizedImage))
+        ////    {
+        ////        graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+        ////    }
+
+        ////    resizedImage.Save(path);
+        ////    resizedImage.Dispose();
+        ////}
+
+        ////private Image CropImage(Image sourceImage, int sourceX, int sourceY, int sourceWidth, int sourceHeight, int destinationWidth, int destinationHeight)
+        ////{
+        ////    Image destinationImage = new Bitmap(destinationWidth, destinationHeight);
+
+        ////    using (Graphics g = Graphics.FromImage(destinationImage))
+        ////        g.DrawImage(
+        ////          sourceImage,
+        ////          new Rectangle(0, 0, destinationWidth, destinationHeight),
+        ////          new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
+        ////          GraphicsUnit.Pixel
+        ////        );
+
+        ////    return destinationImage;
+        ////}
+
+        //public static Bitmap ResizeImage(Image image, int width, int height)
         //{
-        //    using (Graphics graphics = Graphics.FromImage(resizedImage))
+        //    var destRect = new Rectangle(0, 0, width, height);
+        //    var destImage = new Bitmap(width, height);
+
+        //    destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+        //    using (var graphics = Graphics.FromImage(destImage))
         //    {
-        //        graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+        //        graphics.CompositingMode = CompositingMode.SourceCopy;
+        //        graphics.CompositingQuality = CompositingQuality.HighQuality;
+        //        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        //        graphics.SmoothingMode = SmoothingMode.HighQuality;
+        //        graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+        //        using (var wrapMode = new ImageAttributes())
+        //        {
+        //            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+        //            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+        //        }
         //    }
 
-        //    resizedImage.Save(path);
-        //    resizedImage.Dispose();
-        //}
-
-        //private Image CropImage(Image sourceImage, int sourceX, int sourceY, int sourceWidth, int sourceHeight, int destinationWidth, int destinationHeight)
-        //{
-        //    Image destinationImage = new Bitmap(destinationWidth, destinationHeight);
-
-        //    using (Graphics g = Graphics.FromImage(destinationImage))
-        //        g.DrawImage(
-        //          sourceImage,
-        //          new Rectangle(0, 0, destinationWidth, destinationHeight),
-        //          new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-        //          GraphicsUnit.Pixel
-        //        );
-
-        //    return destinationImage;
+        //    return destImage;
         //}
     }
 }
