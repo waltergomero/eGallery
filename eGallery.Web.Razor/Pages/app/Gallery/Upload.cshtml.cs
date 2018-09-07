@@ -109,56 +109,36 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                         // Get the image's original width and height
                         int originalWidth = image.Width;
                         int originalHeight = image.Height;
-                        int maxSize = 860;
-                        int thumbSize = 200;
+                        int maxSize = 960;
+                        int tSize = 200;
 
                         // To preserve the aspect ratio
                         float ratioX = (float)maxSize / (float)originalWidth;
                         float ratioY = (float)maxSize / (float)originalHeight;
                         float ratio = Math.Min(ratioX, ratioY);
 
+                        float ratioTX = (float)tSize / (float)originalWidth;
+                        float ratioTY = (float)tSize / (float)originalHeight;
+                        float ratioT = Math.Min(ratioTX, ratioTY);
+
                         // New width and height based on aspect ratio
                         int newWidth = (int)(originalWidth * ratio);
                         int newHeight = (int)(originalHeight * ratio);
 
-                        //int maxSize = 860;
-                        //int thumbSize = 200;
-                        //int newWidth = 0;
-                        //int newHeight = 0;
-                        //int newThumbWidth = 0;
-                        //int newThumbHeight = 0;
-                        //double resizeFactor = 0;
-                        //double resizeThumbFactor = 0;
+                        int newTWidth = (int)(originalWidth * ratioT);
+                        int newTHeight = (int)(originalHeight * ratioT);
 
-                        //if (image.Width > image.Height)
-                        //{
-                        //    resizeFactor = image.Width / maxSize;
-                        //    resizeThumbFactor = image.Width / thumbSize;
-                        //    format = "l";
-                        //}
-                        //else
-                        //{
-                        //    resizeFactor = image.Height / maxSize;
-                        //    resizeThumbFactor = image.Height / thumbSize;
-                        //    format = "p";
-                        //}
-
-                        //newWidth = (int)Math.Round(image.Width / resizeFactor);
-                        //newHeight = (int)Math.Round(image.Height / resizeFactor);
+                        if (image.Width > image.Height)
+                        {
+                            format = "l";
+                        }
+                        else
+                        {
+                            format = "p";
+                        }
 
                         ResizeAndSaveImage(ImageFile.OpenReadStream(), resizedPath, newWidth, newHeight);
-
-                        //newThumbWidth = (int)Math.Round(image.Width / resizeThumbFactor);
-                        //newThumbHeight = (int)Math.Round(image.Height / resizeThumbFactor);
-
-                        //ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newThumbWidth, newThumbHeight);
-                        //////Generate postal size images 
-                        ////var resizedImage = CropImage(image, 0, 0, image.Width, image.Height, newWidth, newHeight);
-                        ////SaveImage(image, resizedPath, resizedImage, newWidth, newHeight);
-
-                        //////Generate thumb size images 
-                        ////var resizedThumbImage = CropImage(image, 0, 0, image.Width, image.Height, newThumbWidth, newThumbHeight);
-                        ////SaveImage(image, thumbPath, resizedThumbImage, newThumbWidth, newThumbHeight);
+                        ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newTWidth, newTHeight);
 
                         //save information to the database
                         //await this._productService.ProductImageAdd(ProductId, imageName, format);
