@@ -3,7 +3,8 @@
 @{
     ViewData["Title"] = "Upload";
 }
-
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 <div class="row">
     <div class="col-md-12">
@@ -20,7 +21,7 @@
                         <form method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-5">
-                                    <input type="file" id="files" name="files" multiple class="btn btn-default" />
+                                    <input type="file" id="files" name="files" required multiple class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group required row">
@@ -32,9 +33,7 @@
                             <div class="form-group required row">
                                 <label class="col-form-label col-sm-1 text-sm-right">Category:</label>
                                 <div class="col-sm-3">
-                                    <select class="form-control" id="ddCategoryList" asp-items="Model.Categories">
-                                        <option value="0"></option>
-                                    </select>
+                                    @Html.DropDownListFor(x => x.Categories, Model.Categories, "", new { @class = "form-control", required = "Select a Category" })
                                 </div>
                             </div>
                             <div class="form-group">

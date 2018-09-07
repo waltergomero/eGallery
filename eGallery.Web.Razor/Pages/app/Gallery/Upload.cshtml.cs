@@ -47,7 +47,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
         }
 
         //Your existing code for properties goes here
-        public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files)
+        public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files, int CategoryId)
         {
             string struserId = "208";
             string imageGallery = "Gallery";
