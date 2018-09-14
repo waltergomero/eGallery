@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using eGallery.Contracts.Services;
 
 namespace eGallery.UnitOfWork
 {
@@ -13,9 +14,16 @@ namespace eGallery.UnitOfWork
             _uploadService = uploadService;
 
         }
-        public async Task SaveUploadImages(int CategoryId, string ImageName, string UserEmail)
+        public async Task SaveUploadedImages(int ImageId, int CategoryId, string ImageName, string UserEmail, string Format, string FolderName)
         {
-            await _uploadService.SaveCategoryData(CategoryId, ImageName, UserEmail);
+            await _uploadService.SaveUploadedImages(ImageId, CategoryId, ImageName, UserEmail, Format, FolderName);
         }
+
+        public string GetUserFolderName(string UserEmail)
+        {
+            return _uploadService.GetUserFolderName(UserEmail);
+        }
+
+        
     }
 }

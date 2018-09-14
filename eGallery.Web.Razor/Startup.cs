@@ -33,8 +33,25 @@ namespace eGallery.Web.Razor
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+
+               //// User settings.
+                //options.User.AllowedUserNameCharacters =
+                //"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+               // options.User.RequireUniqueEmail = false;
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
+
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
@@ -50,6 +67,7 @@ namespace eGallery.Web.Razor
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
      
             services.AddScoped<IApplicationProperties, ApplicationProperties>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IStatusUnitOfWork, StatusUnitOfWork>();
             services.AddScoped<IStatusService, StatusManager>();
             services.AddScoped<IStatusRepository, StatusRepository>();
@@ -57,6 +75,9 @@ namespace eGallery.Web.Razor
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICommonUnitOfWork, CommonUnitOfWork>();
+            services.AddScoped<IUploadUnitOfWork, UploadUnitOfWork>();
+            services.AddScoped<IUploadService, UploadManager>();
+            services.AddScoped<IUploadRepository, UploadRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

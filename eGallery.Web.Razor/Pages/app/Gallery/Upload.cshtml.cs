@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Http;
  using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace eGallery.Web.Razor.Pages.app.Gallery
 {
@@ -26,7 +28,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
         private readonly ICategoryUnitOfWork _categoryUnitOfWork;
         private readonly ICommonUnitOfWork _commonUnitOfWork;
         private readonly IUploadUnitOfWork _uploadUnitOfWork;
-
+        private readonly UserManager<IdentityUser> _userManager;
 
         public UploadModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IUploadUnitOfWork uploadUnitOfWork, IHostingEnvironment env)
         {
@@ -38,19 +40,30 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
 
         public List<SelectListItem> CategoryId { get; set; }
         public List<CategoryViewModel> categoryList { get; set; }
+        public string FolderName { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
             categoryList = await _categoryUnitOfWork.CategoryList();
             CategoryId = _commonUnitOfWork.CategoryDropDownList(categoryList, "CategoryId", "CategoryName");
+
+            var user = await _userManager.GetUserAsync(User);
+            string UserEmail = user.Email;
+            FolderName = _uploadUnitOfWork.GetUserFolderName(UserEmail);
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files, IFormCollection form)
         {
-            string Id = form["CategoryId"];
-            string UserEmail = form["UserEmail"];
-            string struserId = "208";
+            string CategoryId = form["CategoryId"];
+            string UserEmail = User.Identity.Name;
+            string FolderName = form["FolderName"];
+
+            if (FolderName == "")
+            {
+               FolderName = GetUniqueName("Gal_");
+            }
             string imageGallery = "Gallery";
             string originalGallery = "Original";
             string thumbGallery = "Thumb";
@@ -85,18 +98,16 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             {
                 if (ImageFile != null) // ImageFile = The IFormFile that was uploaded
                 {
-                    string format = "";
-
                     //var imageName = ImageFile.FileName;                   
                     string ext = System.IO.Path.GetExtension(ImageFile.FileName).ToLower();
 
-                    string iName = ImageFile.FileName.Replace(ImageFile.FileName, struserId);
+                    string iName = ImageFile.FileName.Replace(ImageFile.FileName, FolderName);
                     iName = iName + ext;
 
-                    var newName = GetUniqueName(iName);
-                    string orignalPath = Path.Combine(uploadOriginalPath, newName);
-                    string resizedPath = Path.Combine(uploadResisedPath, newName);                   
-                    string thumbPath = Path.Combine(uploadThumbPath, newName);
+                    var newImageName = GetUniqueName(iName);
+                    string orignalPath = Path.Combine(uploadOriginalPath, newImageName);
+                    string resizedPath = Path.Combine(uploadResisedPath, newImageName);                   
+                    string thumbPath = Path.Combine(uploadThumbPath, newImageName);
                 
                     try
                     {
@@ -128,25 +139,27 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
 
                         int newTWidth = (int)(originalWidth * ratioT);
                         int newTHeight = (int)(originalHeight * ratioT);
+                        string Format = "";
 
                         if (image.Width > image.Height)
                         {
-                            format = "l";
+                            Format = "l";
                         }
                         else
                         {
-                            format = "p";
+                            Format = "p";
                         }
 
                         ResizeAndSaveImage(ImageFile.OpenReadStream(), resizedPath, newWidth, newHeight);
                         ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newTWidth, newTHeight);
 
                         //save information to the database
-                        await this._productService.ProductImageAdd(ProductId, imageName, format);
+                        int ImageId = 0;
+                        await this._uploadUnitOfWork.SaveUploadedImages(ImageId, Convert.ToInt32(CategoryId), newImageName, UserEmail, Format, FolderName);
                     }
                     catch (Exception ex)
                     {
-                       // ViewBag.Error = ex.Message;
+                        Message = ex.Message;
                     }
                 }
             }

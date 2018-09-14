@@ -19,10 +19,10 @@
                     </div>
                     <div class="box-body">
                         <form method="post" enctype="multipart/form-data">
-                            <input type="hidden" id="UserEmail" value="@UserManager.GetUserName(User)" />
+                            <input type="hidden" id="FolderName" value="@Model.FolderName" />
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-5">
-                                    <input type="file" id="files" name="files" required multiple class="form-control" />
+                                    <input type="file" id="files" required multiple class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group required row">
