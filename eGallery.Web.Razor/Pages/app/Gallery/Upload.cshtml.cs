@@ -25,30 +25,31 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
 
         private readonly ICategoryUnitOfWork _categoryUnitOfWork;
         private readonly ICommonUnitOfWork _commonUnitOfWork;
+        private readonly IUploadUnitOfWork _uploadUnitOfWork;
 
-        public UploadModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IHostingEnvironment env)
+
+        public UploadModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IUploadUnitOfWork uploadUnitOfWork, IHostingEnvironment env)
         {
             _categoryUnitOfWork = categoryUnitOfWork;
             _commonUnitOfWork = commonUnitOfWork;
+            _uploadUnitOfWork = uploadUnitOfWork;
             _env = env;
         }
 
-        public List<SelectListItem> Categories { get; set; }
+        public List<SelectListItem> CategoryId { get; set; }
         public List<CategoryViewModel> categoryList { get; set; }
-
-//[BindProperty]
-       // public IFormFile Image { set; get; }
 
         public async Task<IActionResult> OnGetAsync()
         {
             categoryList = await _categoryUnitOfWork.CategoryList();
-            Categories = _commonUnitOfWork.CategoryDropDownList(categoryList, "CategoryId", "CategoryName");
+            CategoryId = _commonUnitOfWork.CategoryDropDownList(categoryList, "CategoryId", "CategoryName");
             return Page();
         }
 
-        //Your existing code for properties goes here
-        public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files, int CategoryId)
+        public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files, IFormCollection form)
         {
+            string Id = form["CategoryId"];
+            string UserEmail = form["UserEmail"];
             string struserId = "208";
             string imageGallery = "Gallery";
             string originalGallery = "Original";
@@ -141,7 +142,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                         ResizeAndSaveImage(ImageFile.OpenReadStream(), thumbPath, newTWidth, newTHeight);
 
                         //save information to the database
-                        //await this._productService.ProductImageAdd(ProductId, imageName, format);
+                        await this._productService.ProductImageAdd(ProductId, imageName, format);
                     }
                     catch (Exception ex)
                     {

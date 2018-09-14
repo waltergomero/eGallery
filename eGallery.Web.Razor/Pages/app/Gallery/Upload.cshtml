@@ -19,6 +19,7 @@
                     </div>
                     <div class="box-body">
                         <form method="post" enctype="multipart/form-data">
+                            <input type="hidden" id="UserEmail" value="@UserManager.GetUserName(User)" />
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-5">
                                     <input type="file" id="files" name="files" required multiple class="form-control" />
@@ -33,7 +34,7 @@
                             <div class="form-group required row">
                                 <label class="col-form-label col-sm-1 text-sm-right">Category:</label>
                                 <div class="col-sm-3">
-                                    @Html.DropDownListFor(x => x.Categories, Model.Categories, "", new { @class = "form-control", required = "Select a Category" })
+                                    @Html.DropDownListFor(x => x.CategoryId, Model.CategoryId, "", new { @class = "form-control", required = "Select a Category" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -44,6 +45,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </form>
                     </div>
                 </div>
@@ -71,6 +73,28 @@
 
     $("#files").change(function () {
         readURL(this);
+    });
+
+    $(".lnkAdd").click(function () {
+        var SelCategory = $("#Categories").val();
+        var Images = $("#files").val();
+
+    $.ajax({
+        type: 'post',
+        url: '/app/Gallery/Upload/OnPostAsync',
+        data: {
+            "files": Images,
+            "CategoryId": SelCategory
+        },
+        success: function (response) {
+            if (response == "") {
+
+                window.location.reload();
+            }
+            else
+                alert("error");
+        }
+        });
     });
 
 </script>
