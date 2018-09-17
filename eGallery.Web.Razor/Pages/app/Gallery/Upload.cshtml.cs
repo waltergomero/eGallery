@@ -30,12 +30,13 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
         private readonly IUploadUnitOfWork _uploadUnitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public UploadModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IUploadUnitOfWork uploadUnitOfWork, IHostingEnvironment env)
+        public UploadModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IUploadUnitOfWork uploadUnitOfWork, IHostingEnvironment env, UserManager<IdentityUser> userManager)
         {
             _categoryUnitOfWork = categoryUnitOfWork;
             _commonUnitOfWork = commonUnitOfWork;
             _uploadUnitOfWork = uploadUnitOfWork;
             _env = env;
+            _userManager = userManager;
         }
 
         public List<SelectListItem> CategoryId { get; set; }
@@ -60,7 +61,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             string UserEmail = User.Identity.Name;
             string FolderName = form["FolderName"];
 
-            if (FolderName == "")
+            if (string.IsNullOrEmpty(FolderName))
             {
                FolderName = GetUniqueName("Gal_");
             }
