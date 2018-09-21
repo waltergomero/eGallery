@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.UnitOfWork", "eGal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Web.Razor", "eGallery.Web.Razor\eGallery.Web.Razor.csproj", "{EF5CCC21-DE63-4724-B0C9-098CF4F5DB6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eGallery.Api", "eGallery.Api\eGallery.Api.csproj", "{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eGallery.Api", "eGallery.Api\eGallery.Api.csproj", "{F68737A8-CB9B-48AE-B676-0CF59A53F4F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

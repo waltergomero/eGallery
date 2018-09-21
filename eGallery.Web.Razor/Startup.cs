@@ -18,6 +18,7 @@ using eGallery.Infrastructure.BaseClass.ApplicationProperties;
 using eGallery.UnitOfWork;
 using eGallery.Business;
 using eGallery.Repository;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace eGallery.Web.Razor
 {
@@ -33,6 +34,10 @@ namespace eGallery.Web.Razor
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -46,12 +51,28 @@ namespace eGallery.Web.Razor
                //// User settings.
                 //options.User.AllowedUserNameCharacters =
                 //"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-               // options.User.RequireUniqueEmail = false;
+                options.User.RequireUniqueEmail = false;
+            });
+
+            //Setting the Account Login page 
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings 
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.LoginPath = "/Account/Login"; // If the LoginPath is not set here,  
+                                                      // ASP.NET Core will default to /Account/Login 
+                options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here,  
+                                                        // ASP.NET Core will default to /Account/Logout 
+                options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is  
+                                                                    // not set here, ASP.NET Core  
+                                                                    // will default to  
+                                                                    // /Account/AccessDenied 
+                options.SlidingExpiration = true;
             });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
-
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
@@ -60,12 +81,11 @@ namespace eGallery.Web.Razor
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DatabaseConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-     
+
+
+
             services.AddScoped<IApplicationProperties, ApplicationProperties>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IStatusUnitOfWork, StatusUnitOfWork>();
@@ -81,7 +101,7 @@ namespace eGallery.Web.Razor
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
         {
             if (env.IsDevelopment())
             {
@@ -101,6 +121,39 @@ namespace eGallery.Web.Razor
             app.UseAuthentication();
 
             app.UseMvc();
+            CreateUserRoles(services).Wait();
+        }
+
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            string[] roleNames = { "Admin", "Manager", "Member" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database: Question 1
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+            //IdentityResult roleResult;
+            ////Adding Admin Role 
+            //var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            //if (!roleCheck)
+            //{
+            //    //create the roles and seed them to the database 
+            //    roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            //}
+            //Assign Admin role to the main User here we have given our newly registered  
+            //login id for Admin management 
+            IdentityUser user = await UserManager.FindByEmailAsync("walter.gomero@gmail.com");
+            var User = new IdentityUser();
+            await UserManager.AddToRoleAsync(user, "Admin");
         }
     }
 }

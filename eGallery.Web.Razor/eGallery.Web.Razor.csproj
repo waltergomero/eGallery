@@ -29,4 +29,8 @@
     <ProjectReference Include="..\eGallery.UnitOfWork\eGallery.UnitOfWork.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
+  </ItemGroup>
+
 </Project>

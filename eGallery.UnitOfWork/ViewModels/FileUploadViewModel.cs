@@ -5,9 +5,9 @@ using System.Text;
 
 namespace eGallery.UnitOfWork.ViewModels
 {
-    class FileUploadViewModel
+    public class FileUploadViewModel
     {
-     public IFormFile fileUpload { get; set; }
+     public IFormFile files { get; set; }
      public int ImageId { get; set; }
      public int CategoryId { get; set; }
      public string ImageName { get; set; }

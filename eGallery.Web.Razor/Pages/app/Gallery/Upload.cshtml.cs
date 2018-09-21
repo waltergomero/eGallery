@@ -17,9 +17,11 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eGallery.Web.Razor.Pages.app.Gallery
 {
+    [Authorize]
     public class UploadModel : PageModel
     {
         private readonly IHostingEnvironment _env;
@@ -39,14 +41,20 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             _userManager = userManager;
         }
 
-        public List<SelectListItem> CategoryId { get; set; }
+        public List<SelectListItem> SortedCategoryList { get; set; }
         public List<CategoryViewModel> categoryList { get; set; }
+        public int CategoryId { get; set; }
         public string FolderName { get; set; }
+
+
+        [BindProperty]
+        public FileUploadViewModel fileUpload { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
             categoryList = await _categoryUnitOfWork.CategoryList();
-            CategoryId = _commonUnitOfWork.CategoryDropDownList(categoryList, "CategoryId", "CategoryName");
+            SortedCategoryList = _commonUnitOfWork.CategoryDropDownList(categoryList, "CategoryId", "CategoryName");
 
             var user = await _userManager.GetUserAsync(User);
             string UserEmail = user.Email;
