@@ -45,13 +45,27 @@ namespace eGallery.Repository
 
         public string GetUserFolderName(string UserEmail)
         {
+            string folderName = "";
             using (var sqlConnection = new SqlConnection(connectionString))
             {
                 sqlConnection.OpenAsync();
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("@p_chrUserEmail", UserEmail);
-                 return UserEmail = sqlConnection.Execute("usp_ImageGetUserFoldername", dynamicParameters, commandType: CommandType.StoredProcedure).ToString();
+                return folderName = sqlConnection.Execute("usp_ImageGetUserFoldername", dynamicParameters, commandType: CommandType.StoredProcedure).ToString();
             }
+
+
+            ////var parameters = new SqlParameter[1];
+            ////parameters[0] = new SqlParameter("@p_chrUserEmail", UserEmail);
+            ////using (SqlDataReader dataReader = ExecuteReader("usp_ImageGetUserFoldername", parameters))
+            ////{
+            ////    while (dataReader.Read())
+            ////    {
+            ////        folderName = dataReader.GetValueOrDefault<string>("FolderName");
+            ////    }
+            ////}
+            ////return folderName.ToString();
         }
+
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using eGallery.UnitOfWork.ViewModels;
@@ -12,18 +9,21 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 //using System.Drawing;
- using SixLabors.ImageSharp;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System;
 
 namespace eGallery.Web.Razor.Pages.app.Gallery
 {
     [Authorize]
-    public class UploadModel : PageModel
+    public class UploadImageModel : PageModel
     {
+
         private readonly IHostingEnvironment _env;
         public string Message { get; private set; } = "";
 
@@ -32,7 +32,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
         private readonly IUploadUnitOfWork _uploadUnitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public UploadModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IUploadUnitOfWork uploadUnitOfWork, IHostingEnvironment env, UserManager<IdentityUser> userManager)
+        public UploadImageModel(ICategoryUnitOfWork categoryUnitOfWork, ICommonUnitOfWork commonUnitOfWork, IUploadUnitOfWork uploadUnitOfWork, IHostingEnvironment env, UserManager<IdentityUser> userManager)
         {
             _categoryUnitOfWork = categoryUnitOfWork;
             _commonUnitOfWork = commonUnitOfWork;
@@ -63,6 +63,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             return Page();
         }
 
+ 
         public async Task<IActionResult> OnPostAsync(ICollection<IFormFile> files, IFormCollection form)
         {
             if (files == null || files.Count == 0)
@@ -77,7 +78,7 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
 
             if (string.IsNullOrEmpty(FolderName))
             {
-               FolderName = GetUniqueName("Gal_");
+                FolderName = GetUniqueName("G", 0);
             }
             string imageGallery = "Gallery";
             string originalGallery = "Original";
@@ -86,9 +87,9 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             var webRoot = _env.WebRootPath;
             var path = System.IO.Path.Combine(webRoot, imageGallery);
 
-            string uploadResisedPath = path; //this is where resized images will be stored.
-            string uploadOriginalPath = path + "\\" + originalGallery;
-            string uploadThumbPath = path + "\\" + thumbGallery;
+            string uploadResisedPath = path + "\\" + FolderName;
+            string uploadOriginalPath = path + "\\" + originalGallery + "\\" + FolderName;
+            string uploadThumbPath = path + "\\" + thumbGallery + "\\" + FolderName; 
 
             if (!Directory.Exists(uploadResisedPath))
             {
@@ -107,24 +108,24 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
             {
                 if (ImageFile != null) // ImageFile = The IFormFile that was uploaded
                 {
-                    //var imageName = ImageFile.FileName;                   
-                    string ext = System.IO.Path.GetExtension(ImageFile.FileName).ToLower();
+                    var imageName = ImageFile.FileName;                   
+                   // string ext = System.IO.Path.GetExtension(ImageFile.FileName).ToLower();
 
-                    string iName = ImageFile.FileName.Replace(ImageFile.FileName, FolderName);
-                    iName = iName + ext;
+                    //string iName = ImageFile.FileName.Replace(ImageFile.FileName, FolderName);
+                    //iName = iName + ext;
 
-                    var newImageName = GetUniqueName(iName);
+                    var newImageName = GetUniqueName(imageName, 1);
                     string orignalPath = Path.Combine(uploadOriginalPath, newImageName);
-                    string resizedPath = Path.Combine(uploadResisedPath, newImageName);                   
+                    string resizedPath = Path.Combine(uploadResisedPath, newImageName);
                     string thumbPath = Path.Combine(uploadThumbPath, newImageName);
-                
+
                     try
                     {
                         using (FileStream fs = new FileStream(orignalPath, FileMode.Create))
                         {
                             await ImageFile.CopyToAsync(fs);
                         }
-                         //var image = Image.FromStream(ImageFile.OpenReadStream());
+                        //var image = Image.FromStream(ImageFile.OpenReadStream());
                         Image<Rgba32> image = Image.Load(ImageFile.OpenReadStream());
 
                         // Get the image's original width and height
@@ -173,13 +174,16 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                 }
             }
 
-           return RedirectToPage("Index");
+            return RedirectToPage("Index");
         }
 
-        private string GetUniqueName(string fileName)
+        private string GetUniqueName(string FileName, int number)
         {
-            fileName = Path.GetFileName(fileName);
-            return Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString().Substring(0, 6) + Path.GetExtension(fileName);
+           string filename = Path.GetFileName(FileName);
+        if(number == 0)
+            return Path.GetFileNameWithoutExtension(filename) + "_" + Guid.NewGuid().ToString().Substring(0, 4);
+        else
+            return Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(FileName);
         }
 
         public static void ResizeAndSaveImage(Stream stream, string filename, int newWidth, int newHeight)
@@ -191,56 +195,5 @@ namespace eGallery.Web.Razor.Pages.app.Gallery
                 image.Save(filename); // Automatic encoder selected based on extension.
             }
         }
-
-        ////private void SaveImage(Image image, string path, Image resizedImage, int newWidth, int newHeight)
-        ////{
-        ////    using (Graphics graphics = Graphics.FromImage(resizedImage))
-        ////    {
-        ////        graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-        ////    }
-
-        ////    resizedImage.Save(path);
-        ////    resizedImage.Dispose();
-        ////}
-
-        ////private Image CropImage(Image sourceImage, int sourceX, int sourceY, int sourceWidth, int sourceHeight, int destinationWidth, int destinationHeight)
-        ////{
-        ////    Image destinationImage = new Bitmap(destinationWidth, destinationHeight);
-
-        ////    using (Graphics g = Graphics.FromImage(destinationImage))
-        ////        g.DrawImage(
-        ////          sourceImage,
-        ////          new Rectangle(0, 0, destinationWidth, destinationHeight),
-        ////          new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-        ////          GraphicsUnit.Pixel
-        ////        );
-
-        ////    return destinationImage;
-        ////}
-
-        //public static Bitmap ResizeImage(Image image, int width, int height)
-        //{
-        //    var destRect = new Rectangle(0, 0, width, height);
-        //    var destImage = new Bitmap(width, height);
-
-        //    destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-        //    using (var graphics = Graphics.FromImage(destImage))
-        //    {
-        //        graphics.CompositingMode = CompositingMode.SourceCopy;
-        //        graphics.CompositingQuality = CompositingQuality.HighQuality;
-        //        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        //        graphics.SmoothingMode = SmoothingMode.HighQuality;
-        //        graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-        //        using (var wrapMode = new ImageAttributes())
-        //        {
-        //            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-        //            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-        //        }
-        //    }
-
-        //    return destImage;
-        //}
     }
 }
